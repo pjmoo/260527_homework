@@ -4,20 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-    <link
-      rel="icon"
-      type="image/png"
-      href="../favicon-96x96.png"
-      sizes="96x96"
-    />
-    <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
-    <link rel="shortcut icon" href="../favicon.ico" />
-    <link
-      rel="apple-touch-icon"
-      sizes="180x180"
-      href="../apple-touch-icon.png"
-    />
-    <link rel="manifest" href="../site.webmanifest" />
+    <link rel="icon" type="image/png" href="stitch_export/neon_noir_homepage.png" sizes="32x32" />
 
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=JetBrains+Mono:wght@500&amp;display=swap"
@@ -276,7 +263,7 @@
           <div
             class="w-full h-full bg-cover bg-center"
             style="
-              background-image: url(&quot;tokyo_twilight_hero.png&quot;);
+              background-image: url(&quot;stitch_export/tokyo_twilight_hero.png&quot;);
               background-size: cover;
               background-position: center top;
             "
@@ -570,7 +557,7 @@
     </div>
 
     <!-- Load data.js first, then inline logic -->
-    <script src="../data.js"></script>
+    <script src="data.js"></script>
     <script>
       /* ─── Helpers ─── */
       function showToast(msg) {
@@ -599,7 +586,7 @@
       /* ─── Build card HTML ─── */
       function buildCard(item, index) {
         const delay = (index % 10) * 60;
-        const imgPath = "../" + item.img;
+        const imgPath = item.img;
         return `
             <div class="staggered-entry glass-card rounded-xl overflow-hidden group anime-card-hover card-anim cursor-pointer"
                  style="animation-delay: ${delay}ms"

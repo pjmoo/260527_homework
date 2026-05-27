@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="ko"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<title>NEON NOIR | ANIME PLATFORM</title>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .staggered-entry {
+            animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            opacity: 0;
+        }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .glass-card {
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .anime-card-hover:active {
+            border-color: rgba(157, 223, 46, 0.5);
+            transform: scale(0.98);
+        }
+        /* Category button active state */
+        .cat-btn.active {
+            background-color: rgba(157, 223, 46, 0.15);
+            color: #9ddf2e;
+            font-weight: 700;
+        }
+        /* Card fade-in on filter */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(16px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        .card-anim {
+            animation: fadeInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+        }
+        /* no-scrollbar */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        /* Toast */
+        #toast {
+            transition: opacity 0.3s, transform 0.3s;
+        }
+        #toast.show {
+            opacity: 1 !important;
+            transform: translateY(0) !important;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-secondary-fixed-variant": "#334f00",
+                      "surface-bright": "#33394c",
+                      "inverse-on-surface": "#2a3043",
+                      "on-error": "#690005",
+                      "on-surface": "#dce1fb",
+                      "surface-variant": "#2e3447",
+                      "primary-fixed-dim": "#adc6ff",
+                      "tertiary-container": "#8990a8",
+                      "secondary": "#9ddf2e",
+                      "on-tertiary-fixed-variant": "#3f465c",
+                      "background": "#0c1324",
+                      "secondary-fixed": "#b2f746",
+                      "on-secondary": "#213600",
+                      "on-background": "#dce1fb",
+                      "on-error-container": "#ffdad6",
+                      "on-primary": "#002e6a",
+                      "on-primary-container": "#00285d",
+                      "surface-container": "#191f31",
+                      "primary": "#adc6ff",
+                      "on-primary-fixed": "#001a42",
+                      "on-secondary-fixed": "#121f00",
+                      "on-tertiary-container": "#22293d",
+                      "secondary-fixed-dim": "#98da27",
+                      "on-secondary-container": "#304b00",
+                      "on-primary-fixed-variant": "#004395",
+                      "error-container": "#93000a",
+                      "primary-container": "#4d8eff",
+                      "outline-variant": "#424754",
+                      "tertiary": "#bec6e0",
+                      "on-tertiary-fixed": "#131b2e",
+                      "surface-tint": "#adc6ff",
+                      "surface-container-lowest": "#070d1f",
+                      "surface-container-highest": "#2e3447",
+                      "surface-dim": "#0c1324",
+                      "inverse-surface": "#dce1fb",
+                      "on-tertiary": "#283044",
+                      "error": "#ffb4ab",
+                      "outline": "#8c909f",
+                      "primary-fixed": "#d8e2ff",
+                      "surface": "#0c1324",
+                      "inverse-primary": "#005ac2",
+                      "secondary-container": "#83c300",
+                      "surface-container-high": "#23293c",
+                      "surface-container-low": "#151b2d",
+                      "on-surface-variant": "#c2c6d6",
+                      "tertiary-fixed-dim": "#bec6e0",
+                      "tertiary-fixed": "#dae2fd"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.125rem",
+                      "lg": "0.25rem",
+                      "xl": "0.5rem",
+                      "full": "0.75rem"
+              },
+              "spacing": {
+                      "gutter": "24px",
+                      "unit": "4px",
+                      "margin-desktop": "48px",
+                      "container-max": "1440px",
+                      "margin-mobile": "16px"
+              },
+              "fontFamily": {
+                      "label-sm": ["JetBrains Mono"],
+                      "headline-lg-mobile": ["Inter"],
+                      "display-lg": ["Inter"],
+                      "headline-lg": ["Inter"],
+                      "headline-md": ["Inter"],
+                      "body-md": ["Inter"],
+                      "body-lg": ["Inter"]
+              },
+              "fontSize": {
+                      "label-sm": ["12px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                      "headline-lg-mobile": ["24px", {"lineHeight": "1.2", "fontWeight": "700"}],
+                      "display-lg": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.04em", "fontWeight": "800"}],
+                      "headline-lg": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                      "headline-md": ["24px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                      "body-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                      "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}]
+              }
+            },
+          },
+        }
+    </script>
+</head>
+<body class="bg-background text-on-background selection:bg-secondary selection:text-on-secondary font-body-md text-body-md overflow-x-hidden">
+
+<!-- Toast notification -->
+<div id="toast" class="fixed bottom-8 left-1/2 -translate-x-1/2 z-[200] bg-surface-container-highest text-on-surface px-6 py-3 rounded-full text-sm font-bold shadow-2xl opacity-0 translate-y-4 pointer-events-none border border-white/10">
+    알림 메시지
+</div>
+
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-background/80 dark:bg-background/80 backdrop-blur-xl border-b border-white/5 h-16 transition-all duration-200 ease-in-out">
+<div class="flex justify-between items-center px-gutter max-w-container-max mx-auto h-full">
+<div class="flex items-center gap-4">
+<button id="menu-btn" class="text-primary hover:bg-surface-variant/50 p-2 rounded-full transition-colors">
+<span class="material-symbols-outlined" data-icon="menu">menu</span>
+</button>
+<h1 class="font-headline-md text-headline-md font-black tracking-tighter text-primary">NEON NOIR</h1>
+</div>
+<div class="flex items-center gap-4">
+<button id="search-btn" class="text-primary hover:bg-surface-variant/50 p-2 rounded-full transition-colors">
+<span class="material-symbols-outlined" data-icon="search">search</span>
+</button>
+</div>
+</div>
+</header>
+
+<!-- Search Bar (hidden by default) -->
+<div id="search-bar" class="fixed top-16 w-full z-40 bg-surface-container-lowest/95 backdrop-blur-xl border-b border-white/10 px-gutter py-3 transition-all duration-300 translate-y-[-100%] opacity-0 pointer-events-none">
+    <input id="search-input" type="text" placeholder="애니메이션 검색..." class="w-full bg-surface-container-highest border border-white/10 rounded-lg px-4 py-3 focus:ring-1 focus:ring-secondary text-on-surface outline-none" />
+</div>
+
+<main class="pt-16">
+<!-- Hero Section -->
+<section class="relative h-[70vh] w-full flex items-end pb-12 overflow-hidden">
+<div class="absolute inset-0 z-0">
+    <div class="w-full h-full bg-cover bg-center" style="background-image: url('tokyo_twilight_hero.png'); background-size: cover; background-position: center top;"></div>
+    <div class="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent"></div>
+</div>
+<div class="relative z-10 px-gutter w-full max-w-container-max mx-auto staggered-entry">
+    <span class="font-label-sm text-label-sm uppercase text-secondary mb-2 block tracking-widest">Featured Selection</span>
+    <h2 class="font-display-lg text-[42px] leading-tight mb-4 text-white">나는 씹덕이 아니야!</h2>
+    <p class="font-body-lg text-on-surface-variant max-w-md opacity-90">
+        단순한 감상을 넘어선 큐레이션. 당신의 취향을 정교하게 분석하여 새로운 세계를 제안합니다.
+    </p>
+    <div class="mt-8 flex gap-3">
+        <button id="btn-start" class="bg-secondary text-on-secondary px-6 py-3 rounded-lg font-bold transition-all hover:brightness-110 active:scale-95">
+            지금 시작하기
+        </button>
+        <button id="btn-more" class="border border-secondary text-secondary px-6 py-3 rounded-lg font-bold transition-all hover:bg-secondary/10 active:scale-95">
+            더 보기
+        </button>
+    </div>
+</div>
+</section>
+
+<!-- Category Scroll (Mobile Optimized) -->
+<nav class="sticky top-16 z-40 bg-background/90 backdrop-blur-md py-4 border-b border-white/5">
+<div class="flex gap-4 overflow-x-auto px-gutter no-scrollbar items-center">
+    <button class="cat-btn active whitespace-nowrap font-label-sm text-label-sm px-4 py-2 rounded-full text-secondary font-bold transition-colors" data-cat="all">전체보기</button>
+    <button class="cat-btn whitespace-nowrap font-label-sm text-label-sm px-4 py-2 rounded-full text-on-surface-variant hover:text-primary transition-colors" data-cat="fantasy">판타지</button>
+    <button class="cat-btn whitespace-nowrap font-label-sm text-label-sm px-4 py-2 rounded-full text-on-surface-variant hover:text-primary transition-colors" data-cat="sf">SF</button>
+    <button class="cat-btn whitespace-nowrap font-label-sm text-label-sm px-4 py-2 rounded-full text-on-surface-variant hover:text-primary transition-colors" data-cat="drama">드라마</button>
+    <button class="cat-btn whitespace-nowrap font-label-sm text-label-sm px-4 py-2 rounded-full text-on-surface-variant hover:text-primary transition-colors" data-cat="slice">일상</button>
+    <button class="cat-btn whitespace-nowrap font-label-sm text-label-sm px-4 py-2 rounded-full text-on-surface-variant hover:text-primary transition-colors" data-cat="growth">성장/열혈</button>
+</div>
+</nav>
+
+<!-- Main Content Grid -->
+<section class="px-gutter py-12 max-w-container-max mx-auto">
+<div class="flex justify-between items-end mb-8">
+    <div>
+        <h3 id="section-title" class="font-headline-lg-mobile text-headline-lg-mobile text-white">NEW RELEASES</h3>
+        <p id="section-subtitle" class="font-label-sm text-label-sm text-on-surface-variant mt-1">최신 업데이트 된 인기 작품들</p>
+    </div>
+    <span id="grid-toggle" class="material-symbols-outlined text-secondary cursor-pointer hover:text-primary transition-colors" data-icon="grid_view">grid_view</span>
+</div>
+
+<!-- Anime Card Grid -->
+<div class="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5" id="anime-grid">
+</div>
+
+<div class="mt-12 flex justify-center">
+<button id="btn-view-all" class="flex items-center gap-2 text-primary font-label-sm text-label-sm border border-primary/20 px-8 py-3 rounded-full hover:bg-primary/10 transition-colors">
+    전체 보기 <span class="material-symbols-outlined text-sm" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</div>
+</section>
+
+<!-- Newsletter / Footer Prep -->
+<section class="bg-surface-container-low mt-24 py-16 px-gutter border-t border-white/5">
+<div class="max-w-md mx-auto text-center staggered-entry">
+    <h3 class="font-headline-md text-white mb-4">가장 먼저 소식을 받아보세요</h3>
+    <p class="font-body-md text-on-surface-variant mb-8">주간 큐레이션된 명작 리스트와 독점 배경화면을 무료로 보내드립니다.</p>
+    <div class="relative">
+        <input id="email-input" class="w-full bg-surface-container-highest border-none rounded-lg px-4 py-4 focus:ring-1 focus:ring-primary text-on-surface outline-none" placeholder="Email address" type="email"/>
+        <button id="btn-subscribe" class="absolute right-2 top-2 bottom-2 bg-primary text-on-primary px-4 rounded-md font-bold text-sm hover:brightness-110 transition-all active:scale-95">구독하기</button>
+    </div>
+</div>
+</section>
+</main>
+
+<!-- Footer -->
+<footer class="bg-surface-container-lowest dark:bg-surface-container-lowest w-full py-12 border-t border-white/5 transition-opacity duration-300">
+<div class="flex flex-col md:flex-row justify-between items-center px-gutter max-w-container-max mx-auto gap-8">
+<div class="text-center md:text-left">
+    <h2 class="font-headline-lg text-headline-lg font-black text-primary mb-2">NEON NOIR</h2>
+    <p class="font-label-sm text-label-sm text-on-surface-variant opacity-60">© 2024 NEON NOIR ANIME PLATFORM. ALL RIGHTS RESERVED.</p>
+</div>
+<nav class="flex flex-wrap justify-center gap-6">
+    <a class="font-label-sm text-label-sm text-on-surface-variant hover:text-on-surface transition-colors" href="#">PRIVACY POLICY</a>
+    <a class="font-label-sm text-label-sm text-on-surface-variant hover:text-on-surface transition-colors" href="#">TERMS OF SERVICE</a>
+    <a class="font-label-sm text-label-sm text-on-surface-variant hover:text-on-surface transition-colors" href="#">CONTACT</a>
+    <a class="font-label-sm text-label-sm text-on-surface-variant hover:text-on-surface transition-colors" href="#">ABOUT</a>
+</nav>
+<div class="flex gap-4">
+    <span class="material-symbols-outlined text-on-surface-variant hover:text-secondary cursor-pointer transition-colors" data-icon="language">language</span>
+    <span class="material-symbols-outlined text-on-surface-variant hover:text-secondary cursor-pointer transition-colors" data-icon="settings">settings</span>
+</div>
+</div>
+</footer>
+
+<!-- Navigation Drawer -->
+<div class="fixed inset-0 z-[100] bg-black/80 backdrop-blur-sm pointer-events-none opacity-0 transition-opacity duration-300" id="drawer">
+<div class="h-full w-64 bg-surface-container-lowest shadow-2xl flex flex-col gap-unit p-6 transform -translate-x-full transition-transform duration-300 ease-out">
+    <div class="flex items-center justify-between mb-6">
+        <h3 class="font-label-sm text-label-sm text-primary uppercase tracking-widest">CATEGORIES</h3>
+        <button id="drawer-close" class="text-on-surface-variant hover:text-primary p-1 rounded-full transition-colors">
+            <span class="material-symbols-outlined text-xl">close</span>
+        </button>
+    </div>
+    <div class="flex flex-col gap-2">
+        <a class="drawer-cat-link flex items-center gap-3 p-3 text-on-surface-variant hover:text-primary transition-colors rounded-lg cursor-pointer" data-cat="all">
+            <span class="material-symbols-outlined" data-icon="apps">apps</span> 전체보기
+        </a>
+        <a class="drawer-cat-link flex items-center gap-3 p-3 text-on-surface-variant hover:text-primary transition-colors rounded-lg cursor-pointer" data-cat="fantasy">
+            <span class="material-symbols-outlined" data-icon="magic_button">magic_button</span> 판타지
+        </a>
+        <a class="drawer-cat-link flex items-center gap-3 p-3 text-on-surface-variant hover:text-primary transition-colors rounded-lg cursor-pointer" data-cat="sf">
+            <span class="material-symbols-outlined" data-icon="rocket_launch">rocket_launch</span> SF
+        </a>
+        <a class="drawer-cat-link flex items-center gap-3 p-3 text-on-surface-variant hover:text-primary transition-colors rounded-lg cursor-pointer" data-cat="drama">
+            <span class="material-symbols-outlined" data-icon="theaters">theaters</span> 드라마
+        </a>
+        <a class="drawer-cat-link flex items-center gap-3 p-3 text-on-surface-variant hover:text-primary transition-colors rounded-lg cursor-pointer" data-cat="slice">
+            <span class="material-symbols-outlined" data-icon="wb_sunny">wb_sunny</span> 일상
+        </a>
+        <a class="drawer-cat-link flex items-center gap-3 p-3 text-on-surface-variant hover:text-primary transition-colors rounded-lg cursor-pointer" data-cat="growth">
+            <span class="material-symbols-outlined" data-icon="bolt">bolt</span> 성장/열혈
+        </a>
+    </div>
+</div>
+</div>
+
+<!-- Load data.js first, then inline logic -->
+<script src="../data.js"></script>
+<script>
+    /* ─── Helpers ─── */
+    function showToast(msg) {
+        const toast = document.getElementById('toast');
+        toast.textContent = msg;
+        toast.classList.add('show');
+        toast.style.opacity = '1';
+        toast.style.pointerEvents = 'auto';
+        setTimeout(() => {
+            toast.style.opacity = '0';
+            toast.style.pointerEvents = 'none';
+            toast.classList.remove('show');
+        }, 2500);
+    }
+
+    /* ─── Category labels ─── */
+    const catLabels = {
+        all:     { title: 'NEW RELEASES', sub: '최신 업데이트 된 인기 작품들' },
+        fantasy: { title: '판타지',        sub: '마법과 모험의 세계로' },
+        sf:      { title: 'SF',            sub: '미래와 기계, 인간의 경계를 탐구' },
+        drama:   { title: '드라마',        sub: '감동적인 이야기와 깊은 여운' },
+        slice:   { title: '일상',          sub: '소소하지만 빛나는 순간들' },
+        growth:  { title: '성장/열혈',     sub: '한계를 넘는 열정의 이야기' },
+    };
+
+    /* ─── Build card HTML ─── */
+    function buildCard(item, index) {
+        const delay = (index % 10) * 60;
+        const imgPath = '../' + item.img;
+        return `
+            <div class="staggered-entry glass-card rounded-xl overflow-hidden group anime-card-hover card-anim cursor-pointer"
+                 style="animation-delay: ${delay}ms"
+                 onclick="handleCardClick('${item.title.replace(/'/g, "\\'")}')">
+                <div class="aspect-[3/4] relative overflow-hidden bg-surface-variant">
+                    <img src="${imgPath}"
+                         alt="${item.title}"
+                         class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 group-active:scale-105" />
+                    <div class="absolute top-2 right-2">
+                        <div class="bg-secondary text-on-secondary px-2 py-1 rounded text-[10px] font-bold">NEW</div>
+                    </div>
+                    <div class="absolute bottom-0 left-0 right-0 h-1/2 bg-gradient-to-t from-background to-transparent"></div>
+                </div>
+                <div class="p-4 border-t border-white/5 relative">
+                    <h4 class="font-headline-md text-base text-white mb-1 truncate">${item.title}</h4>
+                    <p class="text-[12px] text-on-surface-variant line-clamp-2 leading-tight">${item.desc}</p>
+                    <div class="mt-3 flex items-center justify-between">
+                        <div class="flex gap-2">
+                            <span class="text-[10px] font-label-sm px-1.5 py-0.5 rounded bg-primary/10 text-primary">SUB</span>
+                            <span class="text-[10px] font-label-sm px-1.5 py-0.5 rounded bg-tertiary/10 text-tertiary">DUB</span>
+                        </div>
+                        <span class="material-symbols-outlined text-[16px] text-on-surface-variant hover:text-secondary cursor-pointer transition-colors"
+                              onclick="event.stopPropagation(); toggleFav(this, '${item.title.replace(/'/g, "\\'")}')">favorite</span>
+                    </div>
+                    <div class="absolute bottom-0 left-0 h-[2px] w-0 bg-secondary transition-all duration-300 group-hover:w-full"></div>
+                </div>
+            </div>
+        `;
+    }
+
+    /* ─── Render grid ─── */
+    let currentCat = 'all';
+    function renderGrid(cat) {
+        currentCat = cat;
+        const grid = document.getElementById('anime-grid');
+        const labels = catLabels[cat] || catLabels.all;
+        document.getElementById('section-title').textContent = labels.title;
+        document.getElementById('section-subtitle').textContent = labels.sub;
+
+        let items = [];
+        if (cat === 'all') {
+            Object.values(animeData).forEach(arr => items.push(...arr));
+        } else {
+            items = animeData[cat] || [];
+        }
+
+        grid.innerHTML = items.map((item, i) => buildCard(item, i)).join('');
+    }
+
+    /* ─── Card click ─── */
+    function handleCardClick(title) {
+        showToast(`「${title}」 상세 페이지로 이동합니다`);
+    }
+
+    /* ─── Favourite toggle ─── */
+    function toggleFav(el, title) {
+        const isFaved = el.style.color === 'rgb(157, 223, 46)';
+        el.style.color = isFaved ? '' : '#9ddf2e';
+        el.style.fontVariationSettings = isFaved
+            ? "'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24"
+            : "'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24";
+        showToast(isFaved ? `즐겨찾기에서 제거했습니다` : `「${title}」을(를) 즐겨찾기에 추가했습니다`);
+    }
+
+    /* ─── Category buttons ─── */
+    const catBtns = document.querySelectorAll('.cat-btn');
+    catBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            catBtns.forEach(b => {
+                b.classList.remove('active', 'text-secondary', 'font-bold', 'bg-secondary/10');
+                b.classList.add('text-on-surface-variant');
+            });
+            btn.classList.add('active', 'text-secondary', 'font-bold');
+            btn.classList.remove('text-on-surface-variant');
+            renderGrid(btn.dataset.cat);
+        });
+    });
+
+    /* ─── Drawer ─── */
+    const drawerOverlay = document.getElementById('drawer');
+    const drawerContent = drawerOverlay.querySelector('div');
+
+    function openDrawer() {
+        drawerOverlay.classList.remove('pointer-events-none', 'opacity-0');
+        drawerContent.classList.remove('-translate-x-full');
+    }
+    function closeDrawer() {
+        drawerOverlay.classList.add('opacity-0', 'pointer-events-none');
+        drawerContent.classList.add('-translate-x-full');
+    }
+
+    document.getElementById('menu-btn').addEventListener('click', openDrawer);
+    document.getElementById('drawer-close').addEventListener('click', closeDrawer);
+    drawerOverlay.addEventListener('click', (e) => {
+        if (e.target === drawerOverlay) closeDrawer();
+    });
+
+    // Drawer category links
+    document.querySelectorAll('.drawer-cat-link').forEach(link => {
+        link.addEventListener('click', () => {
+            const cat = link.dataset.cat;
+            // sync category buttons
+            catBtns.forEach(b => {
+                if (b.dataset.cat === cat) {
+                    b.click();
+                }
+            });
+            closeDrawer();
+            document.getElementById('anime-grid').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+    });
+
+    /* ─── Search button ─── */
+    let searchOpen = false;
+    const searchBar = document.getElementById('search-bar');
+    const searchInput = document.getElementById('search-input');
+
+    document.getElementById('search-btn').addEventListener('click', () => {
+        searchOpen = !searchOpen;
+        if (searchOpen) {
+            searchBar.classList.remove('translate-y-[-100%]', 'opacity-0', 'pointer-events-none');
+            searchBar.classList.add('translate-y-0', 'opacity-100');
+            searchInput.focus();
+        } else {
+            searchBar.classList.add('translate-y-[-100%]', 'opacity-0', 'pointer-events-none');
+            searchBar.classList.remove('translate-y-0', 'opacity-100');
+            renderGrid(currentCat);
+        }
+    });
+
+    searchInput.addEventListener('input', (e) => {
+        const query = e.target.value.trim().toLowerCase();
+        if (!query) { renderGrid(currentCat); return; }
+        const grid = document.getElementById('anime-grid');
+        let allItems = [];
+        Object.values(animeData).forEach(arr => allItems.push(...arr));
+        const filtered = allItems.filter(item =>
+            item.title.toLowerCase().includes(query) || item.desc.toLowerCase().includes(query)
+        );
+        document.getElementById('section-title').textContent = `검색 결과: "${e.target.value}"`;
+        document.getElementById('section-subtitle').textContent = `${filtered.length}개의 작품을 찾았습니다`;
+        grid.innerHTML = filtered.length
+            ? filtered.map((item, i) => buildCard(item, i)).join('')
+            : `<div class="col-span-2 text-center py-16 text-on-surface-variant">검색 결과가 없습니다.</div>`;
+    });
+
+    /* ─── Hero CTA buttons ─── */
+    document.getElementById('btn-start').addEventListener('click', () => {
+        document.getElementById('anime-grid').scrollIntoView({ behavior: 'smooth' });
+        showToast('큐레이션을 시작합니다 ✨');
+    });
+
+    document.getElementById('btn-more').addEventListener('click', () => {
+        catBtns.forEach(b => { if (b.dataset.cat === 'all') b.click(); });
+        document.getElementById('anime-grid').scrollIntoView({ behavior: 'smooth' });
+    });
+
+    /* ─── View all button ─── */
+    document.getElementById('btn-view-all').addEventListener('click', () => {
+        catBtns.forEach(b => { if (b.dataset.cat === 'all') b.click(); });
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    /* ─── Grid toggle (list ↔ grid) ─── */
+    let isListView = false;
+    document.getElementById('grid-toggle').addEventListener('click', () => {
+        const grid = document.getElementById('anime-grid');
+        isListView = !isListView;
+        const icon = document.getElementById('grid-toggle');
+        if (isListView) {
+            grid.className = 'grid grid-cols-1 gap-4';
+            icon.textContent = 'grid_view';
+        } else {
+            grid.className = 'grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5';
+            icon.textContent = 'view_list';
+        }
+        showToast(isListView ? '리스트 뷰로 전환' : '그리드 뷰로 전환');
+    });
+
+    /* ─── Subscribe button ─── */
+    document.getElementById('btn-subscribe').addEventListener('click', () => {
+        const email = document.getElementById('email-input').value.trim();
+        if (!email || !email.includes('@')) {
+            showToast('올바른 이메일 주소를 입력해주세요');
+            return;
+        }
+        showToast(`${email} 구독 신청이 완료되었습니다! 🎉`);
+        document.getElementById('email-input').value = '';
+    });
+
+    /* ─── Sticky Header scroll effect ─── */
+    window.addEventListener('scroll', () => {
+        const header = document.querySelector('header');
+        if (window.scrollY > 50) {
+            header.classList.add('bg-background/95', 'shadow-xl');
+        } else {
+            header.classList.remove('bg-background/95', 'shadow-xl');
+        }
+    });
+
+    /* ─── Initial render ─── */
+    renderGrid('all');
+</script>
+</body></html>
